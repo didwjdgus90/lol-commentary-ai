@@ -1,0 +1,38 @@
+﻿# Python bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+**/.venv/
+
+# Test / quality tool caches
+.pytest_cache/
+.ruff_cache/
+.ty_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Secrets / environment variables
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Generated datasets
+data/raw/
+data/processed/
+
+# Generated ML artifacts
+models/
+mlruns/
