@@ -36,3 +36,8 @@ data/processed/
 # Generated ML artifacts
 models/
 mlruns/
+
+# Local environment / secrets
+.env
+.env.*
+!.env.example

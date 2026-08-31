@@ -1,6 +1,6 @@
 from collections.abc import Sequence
 from time import perf_counter
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from lol_commentary_backend.retrieval.aliases.models import (
     QueryExpansion,
@@ -42,6 +42,13 @@ class DenseRetriever(Protocol):
     ) -> list[RankedCandidate]: ...
 
 
+@runtime_checkable
+class ClosableResource(Protocol):
+    def close(
+        self,
+    ) -> None: ...
+
+
 class RetrievalService:
     def __init__(
         self,
@@ -70,10 +77,27 @@ class RetrievalService:
         self._dense = dense_retriever
         self._source_top_n = source_top_n
         self._rrf_k = rrf_k
+        self._closed = False
 
     @property
     def primary_available(self) -> bool:
         return self._dense is not None
+
+    def close(
+        self,
+    ) -> None:
+        if self._closed:
+            return
+
+        dense = self._dense
+
+        if dense is not None and isinstance(
+            dense,
+            ClosableResource,
+        ):
+            dense.close()
+
+        self._closed = True
 
     def _hit_from_fused(
         self,

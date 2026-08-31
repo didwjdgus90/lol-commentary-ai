@@ -1,0 +1,29 @@
+﻿services:
+  pgvector:
+    image: pgvector/pgvector:0.8.6-pg18-bookworm
+    container_name: lol-commentary-pgvector
+
+    environment:
+      POSTGRES_DB: ${LOL_POSTGRES_DB:-lol_commentary}
+      POSTGRES_USER: ${LOL_POSTGRES_USER:-lol_commentary}
+      POSTGRES_PASSWORD: ${LOL_POSTGRES_PASSWORD:?LOL_POSTGRES_PASSWORD is required}
+
+    ports:
+      - "${LOL_POSTGRES_PORT:-5433}:5432"
+
+    volumes:
+      - lol_commentary_pgdata:/var/lib/postgresql
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${LOL_POSTGRES_USER:-lol_commentary} -d ${LOL_POSTGRES_DB:-lol_commentary}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+
+volumes:
+  lol_commentary_pgdata:

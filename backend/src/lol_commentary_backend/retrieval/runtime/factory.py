@@ -14,11 +14,11 @@ from lol_commentary_backend.retrieval.hybrid.rrf import (
     DEFAULT_RRF_K,
     DEFAULT_SOURCE_TOP_N,
 )
-from lol_commentary_backend.retrieval.runtime.dense import (
-    BgeDenseIndex,
-)
 from lol_commentary_backend.retrieval.runtime.models import (
     RetrievalStrategy,
+)
+from lol_commentary_backend.retrieval.runtime.pgvector_dense import (
+    PgVectorDenseIndex,
 )
 from lol_commentary_backend.retrieval.runtime.service import (
     RetrievalService,
@@ -56,8 +56,10 @@ def build_retrieval_service(
     repository_root: Path,
     enable_primary: bool = True,
     requested_device: str = "auto",
-    batch_size: int = 8,
     strict_versions: bool = True,
+    database_url: str | None = None,
+    pool_min_size: int = 1,
+    pool_max_size: int = 4,
 ) -> RetrievalService:
     chunks_path = (
         repository_root
@@ -110,10 +112,12 @@ def build_retrieval_service(
     )
 
     dense = (
-        BgeDenseIndex.build(
-            chunks,
+        PgVectorDenseIndex.build(
+            corpus_sha256=(decision.corpus_sha256),
+            database_url=database_url,
             requested_device=(requested_device),
-            batch_size=batch_size,
+            pool_min_size=pool_min_size,
+            pool_max_size=pool_max_size,
         )
         if enable_primary
         else None
