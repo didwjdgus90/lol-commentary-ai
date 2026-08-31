@@ -16,6 +16,7 @@ dependencies = [
     "rank-bm25>=0.2.2",
     "selectolax>=0.4.11",
     "sentence-transformers==5.4.0",
+    "tiktoken==0.14.0",
     "transformers==4.57.6",
 ]
 
