@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "decision_version": "0.1.0",
+  "corpus_sha256": "85d1c93a86fdc54a8ea8ea79cd33b62df62ab39464a7dc70e848db369ef20a41",
+  "evaluation_cases": 24,
+  "primary": {
+    "key": "rrf_bge_m3_alias_bm25",
+    "role": "primary",
+    "hit_at_1": 0.8333333333333334,
+    "hit_at_3": 0.9583333333333334,
+    "recall_at_5": 0.9583333333333334,
+    "mrr": 0.9,
+    "online_dense_required": true,
+    "reranker_required": false,
+    "notes": [
+      "Highest Hit@1 among tested non-reranker retrieval pipelines.",
+      "Uses bilingual alias-expanded BM25 plus BGE-M3 dense retrieval with RRF."
+    ]
+  },
+  "fast_fallback": {
+    "key": "alias_bm25",
+    "role": "fast_fallback",
+    "hit_at_1": 0.7916666666666666,
+    "hit_at_3": 0.9583333333333334,
+    "recall_at_5": 0.9583333333333334,
+    "mrr": 0.875,
+    "online_dense_required": false,
+    "reranker_required": false,
+    "notes": [
+      "Alias BM25 Top-10 achieved 100% full-Gold candidate coverage.",
+      "No neural model inference is required for online candidate generation."
+    ]
+  },
+  "rejected_rerankers": [
+    "gte_multilingual_reranker_base",
+    "bge_reranker_v2_m3",
+    "qwen3_reranker_06b"
+  ],
+  "sentence_transformers_version": "5.4.0",
+  "transformers_version": "4.57.6",
+  "decision_rationale": [
+    "Rerankers did not improve Hit@1 over the strongest tested retrieval pipeline.",
+    "Qwen3 reranker matched Alias BM25 Hit@1 but added very high CPU latency.",
+    "BGE-M3 + Alias BM25 RRF is retained as the accuracy-first primary baseline.",
+    "Alias BM25 is retained as a low-cost fallback and ablation baseline."
+  ]
+}
